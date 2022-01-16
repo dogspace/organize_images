@@ -55,7 +55,7 @@ def get_date(filepath):
         "Ss":   date_str[17:] }
     return date_values
 
-# Loops through folder, renames and/or moves files
+# Loops through folder(s), renames image files
 def parse_folder(folder, recurse, formatting):
     global folder_count, image_count, skip_count
     for filename in os.listdir(folder):
@@ -92,7 +92,7 @@ def parse_folder(folder, recurse, formatting):
                             new_filepath = temp_filepath
                             break
                     if dup_count > 30:
-                        print("\n\n\nERROR: OVER 20 DUPLICATE DATES\n\n")
+                        print("\n\n\nERROR: OVER 30 DUPLICATE DATES\n\n")
                         sys.exit()
                 
                 # Rename files
