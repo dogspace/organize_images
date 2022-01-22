@@ -16,6 +16,7 @@ valid_extensions   = [".jpg", ".jpeg", ".png", ".bmp"]
 folder_count = 1
 image_count = 0
 skip_count = 0
+proceed_prompt = False
 
 
 # Prints help message
@@ -79,7 +80,7 @@ def get_date(filepath):
 
 # Loops through folder(s), renames image files
 def parse_folder(folder, recurse, formatting):
-    global folder_count, image_count, skip_count
+    global folder_count, image_count, skip_count, proceed_prompt
     for filename in os.listdir(folder):
         filepath = os.path.join(folder, filename)
         # Check if folder, recurse if enabled
@@ -101,11 +102,11 @@ def parse_folder(folder, recurse, formatting):
                     if key in new_filename:
                         new_filename = new_filename.replace(key, date_values[key])
                 new_filepath = os.path.join(folder, new_filename + file_ext)
-                # If the new filename already exists, append incrementing numbers up to 100
+                # If the new filename already exists, append incrementing numbers
                 # Compare old/new filepaths to maintain formatting if the script is run more than once
                 if os.path.exists(new_filepath) and filepath != new_filepath:
                     dup_count = 1
-                    while dup_count <= 100:
+                    while True:
                         temp_filename = new_filename + " (" + str(dup_count) + ")"
                         temp_filepath = os.path.join(folder, temp_filename + file_ext)
                         if os.path.exists(temp_filepath) and filepath != temp_filepath:
@@ -114,8 +115,22 @@ def parse_folder(folder, recurse, formatting):
                             new_filename = temp_filename
                             new_filepath = temp_filepath
                             break
-                    if dup_count > 100:
-                        print("\n\nERROR: OVER 100 DUPLICATE DATES")
+                    # Confirm that the user wants to proceed after 50 duplicates
+                    if dup_count > 50 and proceed_prompt == False:
+                        print("\n\nWARNING: OVER 50 DUPLICATE DATES SO FAR")
+                        while True:
+                            prompt = input("Proceed?  (Y/n):  ")
+                            if len(prompt) > 0:
+                                if prompt[0].lower() == "y":
+                                    proceed_prompt = True
+                                    break
+                                elif prompt[0].lower() == "n":
+                                    return
+                                else:
+                                    continue
+                    # Force exit after 1000 duplicate names
+                    if dup_count > 1000:
+                        print("\n\nERROR: OVER 1000 DUPLICATE DATES, EXITING")
                         return
                 # Rename image file
                 if filepath != new_filepath:
