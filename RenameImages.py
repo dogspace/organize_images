@@ -115,23 +115,23 @@ def parse_folder(folder, recurse, formatting):
                             new_filename = temp_filename
                             new_filepath = temp_filepath
                             break
-                    # Confirm that the user wants to proceed after 50 duplicates
-                    if dup_count > 50 and proceed_prompt == False:
-                        print("\n\nWARNING: OVER 50 DUPLICATE DATES SO FAR")
-                        while True:
-                            prompt = input("Proceed?  (Y/n):  ")
-                            if len(prompt) > 0:
-                                if prompt[0].lower() == "y":
-                                    proceed_prompt = True
-                                    break
-                                elif prompt[0].lower() == "n":
-                                    return
-                                else:
-                                    continue
-                    # Force exit after 1000 duplicate names
-                    if dup_count > 1000:
-                        print("\n\nERROR: OVER 1000 DUPLICATE DATES, EXITING")
-                        return
+                        # Confirm that the user wants to proceed after 50 duplicates
+                        if dup_count > 50 and proceed_prompt == False:
+                            print("\n\nWARNING: OVER 50 DUPLICATE DATES SO FAR")
+                            while True:
+                                prompt = input("Proceed?  (Y/n):  ")
+                                if len(prompt) > 0:
+                                    if prompt[0].lower() == "y":
+                                        proceed_prompt = True
+                                        break
+                                    elif prompt[0].lower() == "n":
+                                        return
+                                    else:
+                                        continue
+                        # Force exit after 1000 duplicate names
+                        if dup_count > 1000:
+                            print("\n\nERROR: OVER 1000 DUPLICATE DATES, EXITING")
+                            return
                 # Rename image file
                 if filepath != new_filepath:
                     os.rename(filepath, new_filepath)
@@ -158,7 +158,7 @@ def main():
         else:
             folder_path = "".join(sys.argv[1:])
     # Ensure folder path is valid
-    if os.path.isdir(folder_path) and folder_path != "/":
+    if os.path.isdir(folder_path) and folder_path != "/" and folder_path != "":
         parse_folder(folder_path, recurse_flag, formatting)
         print(f"\nFolders scanned: {folder_count}   |   Images renamed: {image_count}   |   Files skipped: {skip_count}\n\n")
     else:
